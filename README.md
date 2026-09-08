@@ -178,12 +178,10 @@ Stratified random 80/20 split — chosen after confirming no-show rates showed n
 **Key finding:** Logistic Regression outperformed Random Forest on every metric, suggesting the relationship between features and no-show risk is largely linear/additive rather than driven by complex interactions — supporting Logistic Regression as the lead model going into Week 6. Top predictors: `booking_lead_days` and `previous_no_shows` (both positive), consistent with Week 4's informal signal checks.
 
 ### Decision Validation: Cancelled Appointment Handling
-Week 4 proposed excluding Cancelled appointments (5.3%) from the model rather than merging them into No-Show. Week 5 tested this decision empirically rather than assuming it: a merged-target model showed slightly weaker performance (ROC-AUC 0.657 vs. 0.669), and behavioral data confirmed Cancelled patients have a *lower* average prior no-show rate (0.418) than even Attended patients (0.457) — meaningfully different from true No-Show patients (0.641). **Decision confirmed, not changed**, with new evidence now backing the original Week 4 proposal.
+Proposed excluding Cancelled appointments (5.3%) from the model rather than merging them into No-Show. Week 5 tested this decision empirically rather than assuming it: a merged-target model showed slightly weaker performance (ROC-AUC 0.657 vs. 0.669), and behavioral data confirmed Cancelled patients have a *lower* average prior no-show rate (0.418) than even Attended patients (0.457) — meaningfully different from true No-Show patients (0.641). **Decision confirmed, not changed**, with new evidence now backing the original Week 4 proposal.
 
 ### Cross-Track Collaboration
-Simulated coordination with the Data Analytics track: their focus on no-show patterns by reminder status and distance to clinic informed the decision to retain `reminder_sent`, `reminder_channel`, and `distance_to_clinic_km` as candidate features despite modest individual effect sizes.
-
-**Deliverables:** `Week5_Baseline_Modelling.ipynb`, `Week5_Project_Summary.docx`
+Coordinated with the Data Analytics track: their focus on no-show patterns by reminder status and distance to clinic informed the decision to retain `reminder_sent`, `reminder_channel`, and `distance_to_clinic_km` as candidate features despite modest individual effect sizes.
 
 ---
 
