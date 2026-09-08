@@ -1,7 +1,7 @@
 # HealthConnect Clinic — Reducing Missed Appointments with Data & AI
 
 **AnalystLab Africa | Experience Lab Internship Programme**
-**Data Science Track | Week 4: Project Kickoff & Problem Understanding**
+**Data Science Track | Week 5: Project Kickoff & Problem Understanding**
 
 ---
 
@@ -22,8 +22,8 @@ This repository documents the **Data Science track** contribution to the shared,
 | Stage | Focus | Status |
 |---|---|---|
 | Problem Understanding | Business scenario review, ML problem definition, initial data assessment | ✅ Week 4 — Complete |
-| Analysis & Solution Design | Formal cleaning, advanced EDA, statistical validation, preprocessing plan | ⏳ Upcoming |
-| Development | Model building and training | ⏳ Upcoming |
+| Analysis & Development | Data preparation, feature engineering, baseline model development | ✅ Week 5 — Complete |
+| Refinement | Feature importance, hyperparameter tuning, production-realistic evaluation | ⏳ Upcoming |
 | Testing & Refinement | Model evaluation and iteration | ⏳ Upcoming |
 | Final Presentation | Consolidated project handoff | ⏳ Upcoming |
 
@@ -41,15 +41,16 @@ healthconnect-clinic-project/
 │   ├── raw/
 │   │   ├── HealthConnect_Appointment_Data.csv
 │   │   └── HealthConnect_Data_Dictionary.xlsx
-│   └── processed/
-│       └── (cleaned/derived datasets will be added from Week 5 onward)
+│  
 │
 ├── notebooks/
-│   └── Week4_ML_Problem_Definition.ipynb
-│
+│   ├── Week4_ML_Problem_Definition.ipynb
+│   └── Week5_Baseline_Modelling.ipynb
+|
 ├── reports/
-│   └── Week4_Project_Summary.docx
-│
+│   ├── Week4_Project_Summary.docx
+│   └── Week5_Project_Summary.docx
+|
 └── resources/
     └── HealthConnect_Clinic_Knowledge_Base.docx   # reference only — Generative AI track resource
 ```
@@ -100,21 +101,12 @@ Full methodology, code, and real output are documented in [`notebooks/Week4_ML_P
 
 ---
 
-## ⚠️ Key Modelling Considerations, Assumptions, Limitations & Risks
-**Assumptions:**
-Cancelled appointments are treated as a distinct patient action, separate from unplanned no-shows, for the purposes of this initial model
-Missing values in distance_to_clinic_km and waiting_time_minutes is assumed to be at random, based on their proportional spread across outcome categories
+## ⚠️ Key Considerations, Assumptions & Limitations
 
-**Limitations:**
-This is a fictional, synthetic dataset — the waiting_time_minutes anomaly (populated for no-show patients) confirms the data does not perfectly mirror real-world clinic behavior, and findings should not be assumed to generalize to a live clinical setting without validation
-5,000 records is a moderate sample size for a clinic-wide model; subgroup analysis (e.g., by appointment_type) may be limited by smaller subgroup sizes
-
-**Risks:**
-waiting_time_minutes was identified as a leakage risk and excluded — but similar risks should be re-checked for any newly engineered features in later phases
-Reminder-related fields (reminder_sent, reminder_channel) may reflect clinic response to perceived risk (e.g., staff already flagging high-risk patients for reminders) rather than a purely independent cause — this potential circularity should be considered when interpreting feature importance later
-
-**Dependencies:**
-Final modelling work in later weeks depends on the Data Analytics track's parallel exploration of the same dataset, and any Machine Learning Engineering track decisions about deployment format, which may influence which features are practical to use in production  
+- **Synthetic data limitation:** the `waiting_time_minutes` anomaly (populated for no-show patients, which is not logically possible in a real clinic) confirms this dataset does not perfectly mirror real-world clinical behavior — findings should be validated cautiously before assuming real-world generalization
+- **Possible circularity risk:** reminder-related fields may reflect existing staff judgement about patient risk rather than a purely independent effect — worth revisiting during feature importance analysis in later weeks
+- **Sample size:** 5,000 records may limit reliable subgroup analysis (e.g., by `appointment_type`) in later modelling stages
+- **Cross-track dependency:** feature and deployment decisions may need to align with parallel work from the Machine Learning Engineering track once that track's system design is finalized 
 
 ---
 
@@ -155,6 +147,49 @@ Additional libraries (`scipy`, `scikit-learn`, `matplotlib`, `seaborn`) will be 
 Move into the Analysis & Solution Design stage: formal data cleaning (structured handling of the three missing-value fields), advanced EDA, statistical validation of the signals identified in Week 4 (e.g., testing whether `booking_lead_days` and `previous_no_shows` differences are statistically significant), and a formal feature preprocessing plan ahead of baseline model development.
 
 ---
+
+## 🤖 Week 5 — Data Preparation, Feature Engineering & Baseline Model Development
+
+**Objective:** Move from Week 4's problem definition into practical baseline model development.
+
+### Data Preparation
+- `reminder_channel` missingness (structural, tied to `reminder_sent = No`) filled with an explicit `'Not Sent'` category
+- `distance_to_clinic_km` missingness (90 rows, spread at random) filled with median
+- Date fields corrected to proper `datetime` type
+- Identifiers, `age_group` (redundant with `age`), and `waiting_time_minutes` (confirmed Week 4 leakage/realism risk) removed
+
+### Feature Engineering
+| Feature | Description |
+|---|---|
+| `is_new_patient` | Binary flag for the 4.8% of patients with zero prior appointments |
+| `prior_no_show_rate` | Previous no-shows ÷ previous appointments; new patients assigned the dataset-wide average rather than 0 |
+| `lead_time_bucket` | `booking_lead_days` binned into Short/Medium/Long using real data quartiles (15/30/45 days) |
+
+### Train/Test Strategy
+Stratified random 80/20 split — chosen after confirming no-show rates showed no meaningful drift across the dataset's 18-month date range, meaning a time-based split wasn't necessary at this baseline stage (noted as a Week 6 consideration).
+
+### Baseline Model Results (real, executed output)
+
+| Model | Accuracy | Precision | Recall | F1 | ROC-AUC |
+|---|---|---|---|---|---|
+| Logistic Regression | 0.616 | 0.614 | 0.672 | 0.642 | **0.669** |
+| Random Forest | 0.600 | 0.604 | 0.633 | 0.618 | 0.635 |
+
+**Key finding:** Logistic Regression outperformed Random Forest on every metric, suggesting the relationship between features and no-show risk is largely linear/additive rather than driven by complex interactions — supporting Logistic Regression as the lead model going into Week 6. Top predictors: `booking_lead_days` and `previous_no_shows` (both positive), consistent with Week 4's informal signal checks.
+
+### Decision Validation: Cancelled Appointment Handling
+Week 4 proposed excluding Cancelled appointments (5.3%) from the model rather than merging them into No-Show. Week 5 tested this decision empirically rather than assuming it: a merged-target model showed slightly weaker performance (ROC-AUC 0.657 vs. 0.669), and behavioral data confirmed Cancelled patients have a *lower* average prior no-show rate (0.418) than even Attended patients (0.457) — meaningfully different from true No-Show patients (0.641). **Decision confirmed, not changed**, with new evidence now backing the original Week 4 proposal.
+
+### Cross-Track Collaboration
+Simulated coordination with the Data Analytics track: their focus on no-show patterns by reminder status and distance to clinic informed the decision to retain `reminder_sent`, `reminder_channel`, and `distance_to_clinic_km` as candidate features despite modest individual effect sizes.
+
+**Deliverables:** `Week5_Baseline_Modelling.ipynb`, `Week5_Project_Summary.docx`
+
+---
+
+## 📈 Proposed Focus for Week 6
+
+Refine the Logistic Regression baseline through formal feature importance analysis and hyperparameter tuning, test a time-based train/test split for production-realistic evaluation, and coordinate with the Machine Learning Engineering track on expected model output format ahead of integration work.
 
 ## 🙋 Author
 
