@@ -23,10 +23,10 @@ This repository documents the **Data Science track** contribution to the shared,
 |---|---|---|
 | Problem Understanding | Business scenario review, ML problem definition, initial data assessment | ✅ Week 4 — Complete |
 | Analysis & Development | Data preparation, feature engineering, baseline model development | ✅ Week 5 — Complete |
-| Refinement | Feature importance, hyperparameter tuning, production-realistic evaluation | ⏳ Upcoming |
+| Integration & Validation | Error analysis, cross-track validation, model refinement | ✅ Week 6 — Complete |
+| Testing & Refinement | Cross-validation, VIF audit, threshold tuning | ⏳ Upcoming |
 | Testing & Refinement | Model evaluation and iteration | ⏳ Upcoming |
 | Final Presentation | Consolidated project handoff | ⏳ Upcoming |
-
 ---
 
 ## 📂 Repository Structure
