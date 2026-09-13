@@ -41,20 +41,22 @@ healthconnect-clinic-project/
 │   ├── raw/
 │   │   ├── HealthConnect_Appointment_Data.csv
 │   │   └── HealthConnect_Data_Dictionary.xlsx
-│  
+│   └── processed/
+│       └── (cleaned/derived datasets will be added from Week 5 onward)
 │
 ├── notebooks/
 │   ├── Week4_ML_Problem_Definition.ipynb
-│   └── Week5_Baseline_Modelling.ipynb
-|
+│   ├── Week5_Baseline_Modelling.ipynb
+│   └── Week6_Model_Improvement_Validation.ipynb
+│
 ├── reports/
 │   ├── Week4_Project_Summary.docx
-│   └── Week5_Project_Summary.docx
-|
+│   ├── Week5_Project_Summary.docx
+│   └── Week6_Project_Summary.docx
+│
 └── resources/
     └── HealthConnect_Clinic_Knowledge_Base.docx   # reference only — Generative AI track resource
 ```
-
 ---
 
 ## 🧬 Dataset Description
