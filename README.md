@@ -196,7 +196,7 @@ Refine the Logistic Regression baseline through formal feature importance analys
 **Objective:** Improve and validate the Week 5 baseline through error analysis and a genuine cross-track integration.
 
 ### Real Cross-Track Integration
-A Data Analytics track intern (Audrey Mphisa) shared five independent descriptive findings and six direct questions about the Week 5 feature set. Her data was verified against ours first, then an ablation study answered each question with evidence:
+A Data Analytics track intern (Audrey Mphisa) shared five independent descriptive findings and six direct questions about the Week 5 feature set. Her data was verified against my findings first, then an ablation study answered each question with evidence:
 
 | Question | Finding |
 |---|---|
