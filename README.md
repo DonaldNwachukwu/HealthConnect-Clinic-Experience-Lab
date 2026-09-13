@@ -189,6 +189,45 @@ Coordinated with the Data Analytics track: their focus on no-show patterns by re
 
 Refine the Logistic Regression baseline through formal feature importance analysis and hyperparameter tuning, test a time-based train/test split for production-realistic evaluation, and coordinate with the Machine Learning Engineering track on expected model output format ahead of integration work.
 
+---
+
+## 🔗 Week 6 — Model Improvement, Error Analysis & Validation
+
+**Objective:** Improve and validate the Week 5 baseline through error analysis and a genuine cross-track integration.
+
+### Real Cross-Track Integration
+A Data Analytics track intern (Audrey Mphisa) shared five independent descriptive findings and six direct questions about the Week 5 feature set. Her data was verified against ours first, then an ablation study answered each question with evidence:
+
+| Question | Finding |
+|---|---|
+| Does `lead_time_bucket` add value beyond `booking_lead_days`? | No — redundant (removed) |
+| Does `prior_no_show_rate` add value beyond `previous_no_shows`? | Modest yes — both retained |
+| Does `is_new_patient` add value beyond `previous_appointments`? | No — redundant (removed) |
+| Do `reminder_sent`/`reminder_channel` materially improve prediction? | No, and they're **perfectly collinear** — `reminder_sent` removed |
+| Does distance remain important after other variables are considered? | Statistically significant individually, but negligible contribution to overall discrimination |
+| Which features are most important? | `booking_lead_days`, `previous_no_shows`, `distance_to_clinic_km`, `prior_no_show_rate`, `previous_appointments` (only these reach p<0.05) |
+
+### Error Analysis
+False negatives (missed no-shows) are concentrated among patients with lower `prior_no_show_rate` and `previous_no_shows` than those with correctly identified no-shows. This indicates that the model is weakest for patients without an obvious risk history, reflecting a structural limitation of a history-driven feature set.
+
+### Refined Model Results (real, executed output)
+
+| Model | Accuracy | Precision | Recall | F1 | ROC-AUC |
+|---|---|---|---|---|---|
+| Week 5 Baseline (Logistic Regression) | 0.616 | 0.614 | 0.672 | 0.642 | 0.669 |
+| Week 6 Refined Logistic Regression | 0.615 | 0.613 | **0.672** | 0.641 | 0.668 |
+| Week 6 Refined Gradient Boosting | 0.617 | 0.617 | 0.662 | 0.639 | 0.661 |
+
+**Candidate model recommendation:** Refined Logistic Regression — matches the baseline's recall exactly (the operationally critical metric, since a missed no-show costs more than a false alarm) while using a leaner, non-collinear, statistically justified feature set (11 fields vs. 14).
+
+**Business relevance:** At ROC-AUC ~0.67, the model is suitable as a risk-flagging aid for staff attention — not yet suitable as a fully autonomous intervention system.
+
+---
+
+## 📈 Proposed Focus for Week 7
+
+Run k-fold cross-validation on the refined Logistic Regression model, conduct a full VIF audit across the refined feature set, test classification threshold adjustments given the asymmetric cost of false negatives, and confirm the refined feature list with the Data Analytics track intern.
+
 ## 🙋 Author
 
 **Donald Nwachukwu**
