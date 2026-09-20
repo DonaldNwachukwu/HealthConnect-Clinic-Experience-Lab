@@ -24,8 +24,8 @@ This repository documents the **Data Science track** contribution to the shared,
 | Problem Understanding | Business scenario review, ML problem definition, initial data assessment | ✅ Week 4 — Complete |
 | Analysis & Development | Data preparation, feature engineering, baseline model development | ✅ Week 5 — Complete |
 | Integration & Validation | Error analysis, cross-track validation, model refinement | ✅ Week 6 — Complete |
-| Testing & Refinement | Cross-validation, VIF audit, threshold tuning | ⏳ Upcoming |
-| Testing & Refinement | Model evaluation and iteration | ⏳ Upcoming |
+| Testing & Refinement | Cross-validation, overfitting checks, threshold tuning, cross-track evidence validation | ✅ Week 7 — Complete |
+| Final Integration & Presentation | End-to-end handoff, final documentation | ⏳ Upcoming |
 | Final Presentation | Consolidated project handoff | ⏳ Upcoming |
 ---
 
@@ -47,12 +47,16 @@ healthconnect-clinic-project/
 ├── notebooks/
 │   ├── Week4_ML_Problem_Definition.ipynb
 │   ├── Week5_Baseline_Modelling.ipynb
-│   └── Week6_Model_Improvement_Validation.ipynb
+│   ├── Week6_Model_Improvement_Validation.ipynb
+│   └── Week7_Model_Testing_Refinement.ipynb
 │
 ├── reports/
 │   ├── Week4_Project_Summary.docx
 │   ├── Week5_Project_Summary.docx
-│   └── Week6_Project_Summary.docx
+│   ├── Week6_Project_Summary.docx
+│   ├── Week7_Project_Summary.docx
+│   ├── Week7_Testing_Validation_Evidence.docx
+│   └── Week7_HCPOD_Cross_Track_Evidence.docx
 │
 └── resources/
     └── HealthConnect_Clinic_Knowledge_Base.docx   # reference only — Generative AI track resource
@@ -229,6 +233,54 @@ False negatives (missed no-shows) are concentrated among patients with lower `pr
 ## 📈 Proposed Focus for Week 7
 
 Run k-fold cross-validation on the refined Logistic Regression model, conduct a full VIF audit across the refined feature set, test classification threshold adjustments given the asymmetric cost of false negatives, and confirm the refined feature list with the Data Analytics track intern.
+
+## 🧪 Week 7 — Model Testing, Error Analysis & Refinement
+
+**Objective:** Systematically test whether the Week 6 candidate model's performance was genuine or a single-split artifact, check for overfitting, validate segment consistency, and refine based on evidence.
+
+### 5-Fold Cross-Validation (real, executed output)
+
+| Feature Set | Mean Test AUC | Std |
+|---|---|---|
+| Week 5 Baseline (14 features) | 0.6793 | 0.0120 |
+| Week 6 Refined (11 features) | 0.6793 | 0.0108 |
+
+Paired t-test across folds: **p = 0.9544** — confirms the Week 6 feature refinement is genuinely equivalent, not a single-split coincidence.
+
+### Overfitting Check
+
+| Model | Train AUC | Test AUC | Gap |
+|---|---|---|---|
+| Logistic Regression | 0.6934 | 0.6678 | 0.0256 (healthy) |
+| Gradient Boosting | 0.7574 | 0.6613 | **0.0961 (overfitting)** |
+
+**Gradient Boosting is now definitively ruled out** as a candidate model.
+
+### Segment Analysis (new input)
+- Patient history and gender segments: broadly consistent (with a small-sample caveat on "Prefer not to say," n=16)
+- **Real inconsistency found:** Specialist Consultation appointments (AUC 0.588) underperform relative to General Consultation (0.696) — flagged for Week 8, not resolved this week
+
+### Threshold Tuning — the clearest improvement found in this project so far
+
+| Threshold | Recall | Precision | F1 |
+|---|---|---|---|
+| Default (0.5) | 0.672 | 0.613 | 0.641 |
+| Tuned (0.478, Youden's J) | **0.730** | 0.612 | 0.666 |
+
+False negatives (missed no-shows) dropped from 159 to 131 at negligible precision cost.
+
+### HC-POD Cross-Track Testing 
+1. **Retested** the Week 6 Data Analytics-informed feature decisions under 5-fold CV — confirmed robust
+2. **Validated a real metric discrepancy** raised by a Data Analytics intern (64.1% vs. 70.5% for a shared Lead Time × Previous No-Show segment): confirmed the 70.5% figure's exact denominator, re-ran with Cancelled included (67.88%), and honestly reported a **partial, not full, reconciliation** — a ~3.8 point gap remains unexplained pending the analyst's exact segment definition
+
+**Candidate model recommendation:** Logistic Regression, 11-feature refined set, **tuned threshold ~0.478**.
+
+---
+
+## 📈 What Must Be Completed Before Week 8
+
+Obtain the Data Analytics intern's exact segment filter logic to fully reconcile the remaining discrepancy; investigate the Specialist Consultation segment weakness; finalize and hand off the candidate model (with its tuned threshold, not just the model object) to ML Engineering.
+
 
 ## 🙋 Author
 
