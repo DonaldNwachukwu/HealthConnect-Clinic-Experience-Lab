@@ -48,7 +48,7 @@ healthconnect-clinic-project/
 │   ├── Week5_Baseline_Modelling.ipynb
 │   ├── Week6_Model_Improvement_Validation.ipynb
 │   └── Week7_Model_Testing_Refinement.ipynb
-|   └── Week8_Final_Model_Documentatio.ipynb
+|   └── Week8_Final_Model_Documentation.ipynb
 │
 ├── reports/
 │   ├── Week4_Project_Summary.docx
