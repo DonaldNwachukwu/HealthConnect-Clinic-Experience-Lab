@@ -25,8 +25,7 @@ This repository documents the **Data Science track** contribution to the shared,
 | Analysis & Development | Data preparation, feature engineering, baseline model development | ✅ Week 5 — Complete |
 | Integration & Validation | Error analysis, cross-track validation, model refinement | ✅ Week 6 — Complete |
 | Testing & Refinement | Cross-validation, overfitting checks, threshold tuning, cross-track evidence validation | ✅ Week 7 — Complete |
-| Final Integration & Presentation | End-to-end handoff, final documentation | ⏳ Upcoming |
-| Final Presentation | Consolidated project handoff | ⏳ Upcoming |
+| Final Integration & Presentation | End-to-end handoff, final documentation |  ✅ Week 8 — Complete |
 ---
 
 ## 📂 Repository Structure
@@ -49,6 +48,7 @@ healthconnect-clinic-project/
 │   ├── Week5_Baseline_Modelling.ipynb
 │   ├── Week6_Model_Improvement_Validation.ipynb
 │   └── Week7_Model_Testing_Refinement.ipynb
+|   └── Week8_Final_Model_Documentatio.ipynb
 │
 ├── reports/
 │   ├── Week4_Project_Summary.docx
@@ -57,6 +57,8 @@ healthconnect-clinic-project/
 │   ├── Week7_Project_Summary.docx
 │   ├── Week7_Testing_Validation_Evidence.docx
 │   └── Week7_HCPOD_Cross_Track_Evidence.docx
+│   └── Week8_Final_Project_Summary.docx
+|   
 │
 └── resources/
     └── HealthConnect_Clinic_Knowledge_Base.docx   # reference only — Generative AI track resource
@@ -280,6 +282,46 @@ False negatives (missed no-shows) dropped from 159 to 131 at negligible precisio
 ## 📈 What Must Be Completed Before Week 8
 
 Obtain the Data Analytics intern's exact segment filter logic to fully reconcile the remaining discrepancy; investigate the Specialist Consultation segment weakness; finalize and hand off the candidate model (with its tuned threshold, not just the model object) to ML Engineering.
+
+
+## 🏁 Week 8 (Final) — Final Model, Documentation & Presentation
+
+**Objective:** Consolidate four weeks of iteration into a final, documented candidate model, with a complete handoff package for ML Engineering and a plain-language business suitability statement.
+
+### Final Model
+**Logistic Regression**, 11-feature refined set, **tuned classification threshold: 0.478**.
+
+### Final Performance (real, executed output)
+
+| Metric | Week 5 Baseline | Week 8 Final |
+|---|---|---|
+| Accuracy | 0.616 | 0.626 |
+| Precision | 0.614 | 0.612 |
+| Recall | 0.672 | **0.732** |
+| F1-score | 0.642 | 0.667 |
+| ROC-AUC | 0.669 | 0.668 |
+
+**Honest verdict:** Raw discriminative power (ROC-AUC) never improved across the project — confirmed statistically equivalent via cross-validation, not just a single-split coincidence. What genuinely improved: a leaner, non-collinear feature set; elimination of an overfitting alternative model (Gradient Boosting); and a real, evidence-based recall gain (0.672 → 0.732) from threshold tuning.
+
+### What the Model Can and Cannot Be Used For
+- **CAN:** Flag at-risk appointments for staff attention; support scheduling decisions as one input; provide an interpretable, auditable risk score
+- **CANNOT:** Automatically cancel/reassign appointments; reliably flag Specialist Consultation appointments (documented weak segment); be deployed on real patient data without re-validation; support causal claims
+
+### Final Model Handoff Artefacts
+`healthconnect_final_model.joblib`, `healthconnect_final_scaler.joblib`, `healthconnect_model_config.json` — the config file explicitly states the required threshold (0.478) so it isn't silently lost during ML Engineering integration.
+
+### Final HC-POD Integration
+1. **Data Analytics → Data Science** (closed): Real collaboration across Weeks 6–7 produced a leaner feature set and a transparently partial reconciliation of a metric discrepancy
+2. **Data Science → ML Engineering** (opened this week): Complete handoff package delivered — model, scaler, and explicit threshold configuration
+
+**Deliverables:** `Week8_Final_Model_Documentation.ipynb`, `Week8_Final_Project_Summary.docx`, model artefacts (`.joblib`, `.json`)
+
+---
+
+## 📌 Project Status: Complete (Weeks 4–8)
+
+This concludes the Data Science track's contribution to the HealthConnect Clinic Experience Lab. The Specialist Consultation segment's weaknesses are documented as known limitations rather than resolved, consistent with this project's approach of reporting real findings over polished ones throughout.
+
 
 
 ## 🙋 Author
